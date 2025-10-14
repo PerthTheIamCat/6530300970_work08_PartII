@@ -3,17 +3,26 @@ import SplashScreen from "../screens/SplashScreen";
 import LoginScreen from "../screens/LoginScreen";
 import Registration from "../screens/Registration";
 
+import { DrawerNavigation } from "./Drawer";
+
 export const StackNavigation = () => {
   const Stack = createNativeStackNavigator();
   return (
-    <Stack.Navigator initialRouteName="LoginScreen">
+    <Stack.Navigator
+      initialRouteName="Login"
+      screenOptions={{
+        headerStyle: { backgroundColor: "#EEFCDC" },
+        headerTitleAlign: "center",
+        headerTitleStyle: { fontSize: 20 },
+      }}
+    >
       <Stack.Screen
-        name="SplashScreen"
+        name="Splash"
         component={SplashScreen}
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="LoginScreen"
+        name="Login"
         component={LoginScreen}
         options={{ headerShown: false }}
       />
@@ -21,6 +30,11 @@ export const StackNavigation = () => {
         name="Registration"
         component={Registration}
         options={{ title: "Register" }}
+      />
+      <Stack.Screen
+        name="Main"
+        component={DrawerNavigation}
+        options={{ headerShown: false }}
       />
     </Stack.Navigator>
   );

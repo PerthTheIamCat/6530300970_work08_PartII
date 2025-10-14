@@ -3,7 +3,7 @@ import { styles } from "../styles/LoginStyles";
 import CustomInput from "../components/input/CustomInput";
 import CustomButton from "../components/Button/CustomButton";
 
-export default function LoginScreen() {
+export default function LoginScreen({ navigation }) {
   const LOGO = { uri: "https://i.ibb.co/yyzQ43h/KU-Logo-PNG.png" };
   return (
     <View style={styles.loginContainer}>
@@ -12,8 +12,18 @@ export default function LoginScreen() {
         <Image source={LOGO} style={styles.logo} resizeMode="contain" />
         <CustomInput placeholder="Username" />
         <CustomInput placeholder="Password" />
-        <CustomButton label="Sign In" />
-        <CustomButton label="Sign Up" />
+        <CustomButton
+          label="Sign In"
+          onPress={() => {
+            navigation.replace("Main");
+          }}
+        />
+        <CustomButton
+          label="Sign Up"
+          onPress={() => {
+            navigation.navigate("Registration");
+          }}
+        />
         <Pressable style={styles.forgotContainer}>
           <Text style={styles.forgotText}>Forgot Password?</Text>
         </Pressable>
