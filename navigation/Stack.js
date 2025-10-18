@@ -2,6 +2,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import SplashScreen from "../screens/SplashScreen";
 import LoginScreen from "../screens/LoginScreen";
 import Registration from "../screens/Registration";
+import ForgetPasswordScreen from "../screens/ForgetPasswordScreen";
 
 import { DrawerNavigation } from "./Drawer";
 
@@ -9,7 +10,7 @@ export const StackNavigation = () => {
   const Stack = createNativeStackNavigator();
   return (
     <Stack.Navigator
-      initialRouteName="Login"
+      initialRouteName={"Splash"}
       screenOptions={{
         headerStyle: { backgroundColor: "#EEFCDC" },
         headerTitleAlign: "center",
@@ -26,16 +27,13 @@ export const StackNavigation = () => {
         component={LoginScreen}
         options={{ headerShown: false }}
       />
-      <Stack.Screen
-        name="Registration"
-        component={Registration}
-        options={{ title: "Register" }}
-      />
+      <Stack.Screen name="Registration" component={Registration} />
       <Stack.Screen
         name="Main"
         component={DrawerNavigation}
         options={{ headerShown: false }}
       />
+      <Stack.Screen name="Recover" component={ForgetPasswordScreen} />
     </Stack.Navigator>
   );
 };
