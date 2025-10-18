@@ -1,34 +1,83 @@
-import { View, Text, FlatList, Image, TextInput, Pressable } from "react-native";
+import {
+  View,
+  Text,
+  FlatList,
+  Image,
+  TextInput,
+  Pressable,
+  Alert,
+} from "react-native";
 import { styles } from "../styles/FriendsStyles";
-
-const DATA = [
-  {
-    id: "1",
-    name: "Kanjana EngSRC",
-    email: "kanjana@eng.src.ku.ac.th",
-    phone: "6330301234",
-    avatar:
-      "https://images.unsplash.com/photo-1552053831-71594a27632d?w=200&h=200&fit=crop",
-  },
-  {
-    id: "2",
-    name: "Harley Cutecat",
-    email: "harley@cuteboy.cat",
-    phone: "6330309999",
-    avatar:
-      "https://images.unsplash.com/photo-1595433707802-6b2626ef1c86?w=200&h=200&fit=crop",
-  },
-];
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import {
+  addFriendByEmail,
+  fetchFriendsForCurrentUser,
+} from "../firebase/AuthModel";
+const AVATAR_PLACEHOLDER =
+  "https://images.unsplash.com/photo-1502685104226-ee32379fefbe?w=200&h=200&fit=crop";
 
 export default function FriendsScreen() {
-  const renderHeader = () => (
+  const { user } = useSelector((state) => state.auth);
+  const [email, setEmail] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [items, setItems] = useState([]);
+
+  const loadFriends = async () => {
+    try {
+      const list = await fetchFriendsForCurrentUser();
+      const mapped = list.map((f) => ({
+        id: f.id,
+        name:
+          `${(f.firstname || "").trim()} ${(f.lastname || "").trim()}`.trim() ||
+          f.email,
+        email: f.email,
+        phone: f.studentID || "",
+        avatar: f.photoURL || AVATAR_PLACEHOLDER,
+      }));
+      setItems(mapped);
+    } catch (e) {
+      // silently ignore or alert
+    }
+  };
+
+  useEffect(() => {
+    loadFriends();
+  }, []);
+
+  const onAdd = async () => {
+    const trimmed = email.trim();
+    if (!trimmed || !trimmed.includes("@")) {
+      Alert.alert("Invalid email", "Please enter a valid email.");
+      return;
+    }
+    try {
+      setSubmitting(true);
+      await addFriendByEmail(trimmed);
+      setEmail("");
+      await loadFriends();
+      Alert.alert("Added", "Friend added successfully.");
+    } catch (e) {
+      Alert.alert("Unable to add", e.message || "Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const Header = (
     <View style={styles.addFriendRow}>
       <TextInput
-        placeholder="kanjana@eng.src.ku.ac.th"
+        placeholder="friend@example.com"
         style={styles.addFriendInput}
+        value={email}
+        onChangeText={setEmail}
+        autoCapitalize="none"
+        keyboardType="email-address"
+        returnKeyType="done"
+        blurOnSubmit={false}
       />
-      <Pressable style={styles.addButton} onPress={() => {}}>
-        <Text style={styles.addButtonLabel}>+</Text>
+      <Pressable style={styles.addButton} onPress={onAdd} disabled={submitting}>
+        <Text style={styles.addButtonLabel}>{submitting ? "…" : "+"}</Text>
       </Pressable>
     </View>
   );
@@ -48,12 +97,13 @@ export default function FriendsScreen() {
 
   return (
     <View style={styles.friendsContainer}>
+      {Header}
       <FlatList
-        data={DATA}
+        data={items}
         keyExtractor={(item) => item.id}
         renderItem={renderItem}
-        ListHeaderComponent={renderHeader}
         contentContainerStyle={styles.listContent}
+        keyboardShouldPersistTaps="handled"
       />
     </View>
   );

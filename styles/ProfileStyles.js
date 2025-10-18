@@ -19,4 +19,12 @@ export const styles = StyleSheet.create({
     borderTopLeftRadius: 20,
     borderBottomRightRadius: 20,
   },
+  avatar: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    marginTop: 16,
+    marginBottom: 8,
+    backgroundColor: '#ddd',
+  },
 });

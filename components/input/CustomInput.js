@@ -1,7 +1,14 @@
 import { TextInput } from "react-native";
 import { styles } from "./Styles";
 
-export default function CustomInput({ placeholder, value, onChangeText, secureTextEntry = false, keyboardType = "default" }) {
+export default function CustomInput({
+  placeholder,
+  value,
+  onChangeText,
+  secureTextEntry = false,
+  keyboardType = "default",
+  editable = true,
+}) {
   return (
     <TextInput
       placeholder={placeholder}
@@ -11,6 +18,7 @@ export default function CustomInput({ placeholder, value, onChangeText, secureTe
       secureTextEntry={secureTextEntry}
       keyboardType={keyboardType}
       autoCapitalize="none"
+      editable={editable}
     />
   );
 }
